@@ -11,6 +11,29 @@ Busca e cacheia cotacao de mercado real. Mantem conexao WebSocket com a Binance 
 - Publica (assincrono, via fila): cada atualizacao de preco relevante, consumida pelo `trading-service`.
 - Exposto (sincrono, via API Gateway): consulta pontual de cotacao atual, se o frontend precisar exibir direto.
 
+## API (via gateway: `/api/cotacoes`)
+
+| Metodo | Caminho | Descricao |
+|---|---|---|
+| GET | `/cotacoes` | Ultimo preco de todos os ativos acompanhados |
+| GET | `/cotacoes/{simbolo}` | Ultimo preco de um ativo (ex.: `BTCUSDT`), 404 se ainda nao chegou |
+
+Funcionamento:
+
+- `BinanceWebSocketManager` (**Singleton**) abre uma unica conexao no stream combinado `<simbolo>@miniTicker`
+  de `wss://data-stream.binance.vision` (endpoint so de dados de mercado, funciona tambem a partir de servidores nos EUA) e reconecta sozinho se cair.
+- Cada preco vai pro Redis (`cotacao:{SIMBOLO}`) e, se mudou, e publicado como `preco.atualizado` no exchange `tigrinho.eventos`.
+- Sem acesso a Binance, ligue o simulador (`SIMULADOR_ENABLED=true`, `BINANCE_ENABLED=false`).
+
+## Rodando
+
+```bash
+mvn verify            # testes + relatorio Jacoco (target/site/jacoco); falha abaixo de 80% de linhas
+```
+
+Variaveis: `REDIS_HOST`, `RABBITMQ_HOST`, `MARKET_DATA_SIMBOLOS` (padrao `BTCUSDT,ETHUSDT,SOLUSDT`),
+`BINANCE_ENABLED`, `BINANCE_WS_URL`, `SIMULADOR_ENABLED`, `MARKET_DATA_CACHE` (`redis` ou `memoria`).
+
 ## Repositorios do projeto
 
 - [trading-service](https://github.com/tigrinho-trader/trading-service)

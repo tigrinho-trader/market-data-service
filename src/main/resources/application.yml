@@ -4,6 +4,30 @@ server:
 spring:
   application:
     name: market-data-service
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+
+mensageria:
+  exchange: tigrinho.eventos
+
+market-data:
+  # redis (padrao) ou memoria
+  cache: ${MARKET_DATA_CACHE:redis}
+  simbolos: ${MARKET_DATA_SIMBOLOS:BTCUSDT,ETHUSDT,SOLUSDT}
+  binance:
+    enabled: ${BINANCE_ENABLED:true}
+    # endpoint so de dados de mercado, acessivel inclusive de servidores nos EUA (EC2)
+    url: ${BINANCE_WS_URL:wss://data-stream.binance.vision}
+  simulador:
+    enabled: ${SIMULADOR_ENABLED:false}
+    intervalo-ms: 1000
 
 management:
   endpoints:
