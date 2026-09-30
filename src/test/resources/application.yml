@@ -1,0 +1,13 @@
+spring:
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+
+market-data:
+  cache: memoria
+  simbolos: BTCUSDT,ETHUSDT
+  binance:
+    enabled: false
+  simulador:
+    enabled: false
