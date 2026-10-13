@@ -4,11 +4,11 @@ Parte do projeto **Tigrinho Trader** (disciplina Projeto de Software).
 
 ## Finalidade
 
-Busca e cacheia cotacao de mercado real. Mantem conexao WebSocket com a Binance (cripto) e/ou consulta a brapi.dev (acoes B3). Usa Singleton no gerenciador da conexao externa.
+Busca e cacheia cotacoes reais de mercado, usadas pelo jogo no estudo sobre previsao da direcao do preco. Mantem conexao WebSocket com a Binance (cripto) e/ou consulta a brapi.dev (acoes B3). Usa Singleton no gerenciador da conexao externa.
 
 ## Como interage com os outros servicos
 
-- Publica (assincrono, via fila): cada atualizacao de preco relevante, consumida pelo `trading-service`.
+- Publica (assincrono, via fila): cada atualizacao de preco relevante, consumida pelo `trading-service` (rodadas e flechas de mercado).
 - Exposto (sincrono, via API Gateway): consulta pontual de cotacao atual, se o frontend precisar exibir direto.
 
 ## API (via gateway: `/api/cotacoes`)
