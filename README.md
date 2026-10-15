@@ -23,6 +23,7 @@ Funcionamento:
 - `BinanceWebSocketManager` (**Singleton**) abre uma unica conexao no stream combinado `<simbolo>@miniTicker`
   de `wss://data-stream.binance.vision` (endpoint so de dados de mercado, funciona tambem a partir de servidores nos EUA) e reconecta sozinho se cair.
 - Cada preco vai pro Redis (`cotacao:{SIMBOLO}`) e, se mudou, e publicado como `preco.atualizado` no exchange `tigrinho.eventos`.
+- O endpoint SSE `GET /cotacoes/stream` distribui as mesmas atualizacoes para todos os navegadores; o frontend nao conecta diretamente na Binance.
 - Sem acesso a Binance, ligue o simulador (`SIMULADOR_ENABLED=true`, `BINANCE_ENABLED=false`).
 
 ## Rodando
