@@ -4,30 +4,58 @@ import java.util.List;
 import java.util.Locale;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+/** Propriedades mutáveis para o binder do Spring Boot no Compose/EasyPanel. */
 @ConfigurationProperties(prefix = "market-data")
-public record MarketDataProperties(List<String> simbolos, Binance binance, Deriv deriv) {
+public class MarketDataProperties {
+    private List<String> simbolos = List.of("BTCUSDT", "ETHUSDT");
+    private Binance binance = new Binance(false, null);
+    private Deriv deriv = new Deriv(false, null);
+
+    public MarketDataProperties() {
+    }
 
     public MarketDataProperties(List<String> simbolos, Binance binance) {
         this(simbolos, binance, null);
     }
 
-    public MarketDataProperties {
-        simbolos = simbolos == null || simbolos.isEmpty()
+    public MarketDataProperties(List<String> simbolos, Binance binance, Deriv deriv) {
+        setSimbolos(simbolos);
+        setBinance(binance);
+        setDeriv(deriv);
+    }
+
+    public List<String> simbolos() { return simbolos; }
+
+    public void setSimbolos(List<String> simbolos) {
+        this.simbolos = simbolos == null || simbolos.isEmpty()
                 ? List.of("BTCUSDT", "ETHUSDT")
                 : simbolos.stream().map(s -> s.trim().toUpperCase(Locale.ROOT)).toList();
-        binance = binance == null ? new Binance(false, null) : binance;
-        deriv = deriv == null ? new Deriv(false, "wss://api.derivws.com/trading/v1/options/ws/public") : deriv;
     }
 
-    public record Binance(boolean enabled, String url) {
-        public Binance {
-            url = url == null || url.isBlank() ? "wss://data-stream.binance.vision" : url;
-        }
+    public Binance binance() { return binance; }
+    public void setBinance(Binance binance) { this.binance = binance == null ? new Binance(false, null) : binance; }
+    public Deriv deriv() { return deriv; }
+    public void setDeriv(Deriv deriv) { this.deriv = deriv == null ? new Deriv(false, null) : deriv; }
+
+    public static class Binance {
+        private boolean enabled;
+        private String url = "wss://data-stream.binance.vision";
+        public Binance() { }
+        public Binance(boolean enabled, String url) { this.enabled = enabled; setUrl(url); }
+        public boolean enabled() { return enabled; }
+        public void setEnabled(boolean enabled) { this.enabled = enabled; }
+        public String url() { return url; }
+        public void setUrl(String url) { this.url = url == null || url.isBlank() ? "wss://data-stream.binance.vision" : url; }
     }
 
-    public record Deriv(boolean enabled, String url) {
-        public Deriv {
-            url = url == null || url.isBlank() ? "wss://api.derivws.com/trading/v1/options/ws/public" : url;
-        }
+    public static class Deriv {
+        private boolean enabled;
+        private String url = "wss://api.derivws.com/trading/v1/options/ws/public";
+        public Deriv() { }
+        public Deriv(boolean enabled, String url) { this.enabled = enabled; setUrl(url); }
+        public boolean enabled() { return enabled; }
+        public void setEnabled(boolean enabled) { this.enabled = enabled; }
+        public String url() { return url; }
+        public void setUrl(String url) { this.url = url == null || url.isBlank() ? "wss://api.derivws.com/trading/v1/options/ws/public" : url; }
     }
 }
