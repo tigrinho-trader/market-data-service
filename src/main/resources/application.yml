@@ -25,6 +25,9 @@ market-data:
     enabled: ${BINANCE_ENABLED:true}
     # endpoint so de dados de mercado, acessivel inclusive de servidores nos EUA (EC2)
     url: ${BINANCE_WS_URL:wss://data-stream.binance.vision}
+  deriv:
+    enabled: ${DERIV_ENABLED:true}
+    url: ${DERIV_WS_URL:wss://api.derivws.com/trading/v1/options/ws/public}
   simulador:
     enabled: ${SIMULADOR_ENABLED:false}
     intervalo-ms: 1000
