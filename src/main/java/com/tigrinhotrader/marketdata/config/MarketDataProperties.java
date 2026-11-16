@@ -32,6 +32,21 @@ public class MarketDataProperties {
                 : simbolos.stream().map(s -> s.trim().toUpperCase(Locale.ROOT)).toList();
     }
 
+    /**
+     * Simbolo da Deriv (indices sinteticos 1HZ... e R_..., forex e metais frx...): vai pela conexao da Deriv, nao pela
+     * Binance.
+     */
+    public static boolean daDeriv(String simbolo) {
+        String s = simbolo == null ? "" : simbolo.trim().toUpperCase(Locale.ROOT);
+        return s.startsWith("1HZ") || s.startsWith("R_") || s.startsWith("FRX");
+    }
+
+    /** O nome que a Deriv aceita: o prefixo frx em minusculas (frxXAUUSD); o resto em maiusculas. */
+    public static String nomeNaDeriv(String simbolo) {
+        String s = simbolo.trim().toUpperCase(Locale.ROOT);
+        return s.startsWith("FRX") ? "frx" + s.substring(3) : s;
+    }
+
     public Binance binance() { return binance; }
     public void setBinance(Binance binance) { this.binance = binance == null ? new Binance(false, null) : binance; }
     public Deriv deriv() { return deriv; }

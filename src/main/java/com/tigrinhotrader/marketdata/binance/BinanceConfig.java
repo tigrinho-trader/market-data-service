@@ -26,7 +26,8 @@ public class BinanceConfig {
     public void iniciar() {
         if (propriedades.binance().enabled()) {
             BinanceWebSocketManager.getInstance().conectar(
-                    BinanceWebSocketManager.montarUri(propriedades.binance().url(), propriedades.simbolos()),
+                    BinanceWebSocketManager.montarUri(propriedades.binance().url(), propriedades.simbolos().stream()
+                            .filter(s -> !MarketDataProperties.daDeriv(s)).toList()),
                     parser::parse,
                     cotacaoService::registrar);
         }

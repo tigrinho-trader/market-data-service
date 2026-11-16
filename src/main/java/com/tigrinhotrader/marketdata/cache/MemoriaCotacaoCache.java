@@ -18,12 +18,12 @@ public class MemoriaCotacaoCache implements CotacaoCache {
 
     @Override
     public void salvar(Cotacao cotacao) {
-        cotacoes.put(cotacao.simbolo(), cotacao);
+        cotacoes.put(cotacao.simbolo().toUpperCase(java.util.Locale.ROOT), cotacao);
     }
 
     @Override
     public Optional<Cotacao> buscar(String simbolo) {
-        return Optional.ofNullable(cotacoes.get(simbolo));
+        return Optional.ofNullable(cotacoes.get(simbolo.toUpperCase(java.util.Locale.ROOT)));
     }
 
     @Override

@@ -23,7 +23,9 @@ public class DerivConfig {
 
     @EventListener(ApplicationReadyEvent.class)
     public void iniciar() {
-        var ativos = propriedades.simbolos().stream().filter("1HZ100V"::equals).toList();
+        // a lista vem em maiusculas: a Deriv quer frxXAUUSD (ouro), frxXAGUSD (prata), 1HZ100V...
+        var ativos = propriedades.simbolos().stream().filter(MarketDataProperties::daDeriv)
+                .map(MarketDataProperties::nomeNaDeriv).toList();
         if (propriedades.deriv().enabled() && !ativos.isEmpty()) {
             manager = new DerivWebSocketManager(mapper, ativos, propriedades.deriv().url(), cotacaoService::registrar);
             manager.iniciar();

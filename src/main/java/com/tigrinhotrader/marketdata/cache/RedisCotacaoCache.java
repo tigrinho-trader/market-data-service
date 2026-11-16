@@ -29,8 +29,9 @@ public class RedisCotacaoCache implements CotacaoCache {
     @Override
     public void salvar(Cotacao cotacao) {
         try {
-            redis.opsForValue().set(PREFIXO + cotacao.simbolo(), objectMapper.writeValueAsString(cotacao));
-            redis.opsForSet().add(INDICE, cotacao.simbolo());
+            String chave = chave(cotacao.simbolo());
+            redis.opsForValue().set(PREFIXO + chave, objectMapper.writeValueAsString(cotacao));
+            redis.opsForSet().add(INDICE, chave);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Falha ao serializar cotacao " + cotacao.simbolo(), e);
         }
@@ -38,7 +39,12 @@ public class RedisCotacaoCache implements CotacaoCache {
 
     @Override
     public Optional<Cotacao> buscar(String simbolo) {
-        return Optional.ofNullable(redis.opsForValue().get(PREFIXO + simbolo)).map(this::ler);
+        return Optional.ofNullable(redis.opsForValue().get(PREFIXO + chave(simbolo))).map(this::ler);
+    }
+
+    /** Chave em maiusculas: frxXAUUSD e FRXXAUUSD sao a mesma cotacao. */
+    private static String chave(String simbolo) {
+        return simbolo.toUpperCase(java.util.Locale.ROOT);
     }
 
     @Override
